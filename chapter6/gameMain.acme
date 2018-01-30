@@ -29,6 +29,7 @@ sta $0328
 +LIBSCREEN_SETCOLORS Blue, White, Black, Black, Black
 
 ; Fill 1000 bytes (40x25) of screen memory 
+!ct scr
 +LIBSCREEN_SET1000 SCREENRAM, 'a' ; 'a' maps to char 1
 
 ; Fill 1000 bytes (40x25) of color memory
