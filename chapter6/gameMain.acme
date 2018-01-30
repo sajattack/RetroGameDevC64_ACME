@@ -44,4 +44,4 @@ gMLoop
         ; Game update code goes here
         ;dec EXTCOL ; end code timer reset border color
         jmp gMLoop
-
++LIBSCREEN_RAMTABLE
