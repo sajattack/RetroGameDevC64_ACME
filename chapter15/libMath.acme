@@ -1,0 +1,209 @@
+;===============================================================================
+; Macros/Subroutines
+
+!macro  LIBMATH_ABS_AA .N, .R { 
+                        ; .N = Number (Address)
+                        ; .R = Result (Address)
+        lda .N 
+        bpl .positive
+        eor #$FF        ; invert the bits
+        sta .R 
+        inc .R          ; add 1 to give the two's compliment
+        jmp .done
+.positive
+        sta .R 
+.done
+
+}
+
+;==============================================================================
+
+!macro  LIBMATH_ADD8BIT_AAA .N1, .N2, .SUM {
+                ; .N1 = 1st Number (Address)
+                ; .N2 = 2nd Number (Address)
+                ; .SUM = Sum (Address)
+        clc     ; Clear carry before add
+        lda .N1  ; Get first number
+        adc .N2 ; Add to second number
+        sta .SUM  ; Store in sum
+}
+
+;==============================================================================
+
+!macro  LIBMATH_ADD8BIT_AVA .N1, .N2, .SUM {
+                ; .N1 = 1st Number (Address)
+                ; .N2 = 2nd Number (Value)
+                ; .SUM = Sum (Address)
+        clc     ; Clear carry before add
+        lda .N1  ; Get first number
+        adc #.N2 ; Add to second number
+        sta .SUM  ; Store in sum
+}
+
+;==============================================================================
+
+!macro  LIBMATH_ADD16BIT_AAVAAA .N1H, .N1L, .N2H, .N2L, .SUMH, .SUML {
+                ; .N1H = 1st Number High Byte (Address)
+                ; .N1L = 1st Number Low Byte (Address)
+                ; .N2H = 2nd Number High Byte (Value)
+                ; .N2L = 2nd Number Low Byte (Address)
+                ; .SUMH = Sum High Byte (Address)
+                ; .SUML = Sum Low Byte (Address)
+        clc     ; Clear carry before first add
+        lda .N1L  ; Get LSB of first number
+        adc .N2L  ; Add LSB of second number
+        sta .SUML  ; Store in LSB of sum
+        lda .N1H  ; Get MSB of first number
+        adc #.N2H ; Add carry and MSB of NUM2
+        sta .SUMH  ; Store sum in MSB of sum
+}
+
+;==============================================================================
+
+!macro  LIBMATH_ADD16BIT_AAVVAA .N1H, .N1L, .N2H, .N2L, .SUMH, .SUML {
+                ; .N1H = 1st Number High Byte (Address)
+                ; .N1L = 1st Number Low Byte (Address)
+                ; .N2H = 2nd Number High Byte (Value)
+                ; .N2L = 2nd Number Low Byte (Value)
+                ; .SUMH = Sum High Byte (Address)
+                ; .SUML = Sum Low Byte (Address)
+        clc     ; Clear carry before first add
+        lda .N1L  ; Get LSB of first number
+        adc #.N2L ; Add LSB of second number
+        sta .SUML  ; Store in LSB of sum
+        lda .N1H  ; Get MSB of first number
+        adc #.N2H ; Add carry and MSB of NUM2
+        sta .SUMH  ; Store sum in MSB of sum
+}
+
+;==============================================================================
+
+!macro  LIBMATH_MIN8BIT_AV .N1, .N2 {
+                                ; .N1 = Number 1 (Address)
+                                ; .N2 = Number 2 (Value)
+        
+        lda #.N2                ; load Number 2
+        cmp .N1                 ; compare with Number 1
+        bcs .skip               ; if Number 2 >= Number 1 then skip
+        sta .N1                 ; else replace Number1 with Number2
+.skip
+}
+
+;==============================================================================
+
+!macro  LIBMATH_MAX8BIT_AV .N1, .N2 {
+                                ; .N1 = Number 1 (Address)
+                                ; .N2 = Number 2 (Value)
+        
+        lda #.N2                ; load Number 2
+        cmp .N1                 ; compare with Number 1
+        bcc .skip               ; if Number 2 < Number 1 then skip
+        sta .N1                 ; else replace Number1 with Number2
+.skip
+}
+
+;==============================================================================
+
+!macro  LIBMATH_MIN16BIT_AAVV .N1H, .N1L, .N2H, .N2L {
+                                ; .N1H = Number 1 High (Address)
+                                ; .N1L = Number 1 Low (Address)
+                                ; .N2H = Number 2 High (Value)
+                                ; .N2L = Number 2 Low (Value)
+        
+        ; high byte
+        lda .N1H                ; load Number 1
+        cmp #.N2H               ; compare with Number 2
+        bmi .skip               ; if Number 1 < Number 2 then skip
+        lda #.N2H
+        sta .N1H                ; else replace Number1 with Number2
+
+        ; low byte
+        lda #.N2L               ; load Number 2
+        cmp .N1L                ; compare with Number 1
+        bcs .skip               ; if Number 2 >= Number 1 then skip
+        sta .N1L                ; else replace Number1 with Number2
+.skip
+}
+
+;==============================================================================
+
+!macro  LIBMATH_MAX16BIT_AAVV .N1H, .N1L, .N2H, .N2L {
+                                ; .N1H = Number 1 High (Address)
+                                ; .N1L = Number 1 Low (Address)
+                                ; .N2H = Number 2 High (Value)
+                                ; .N2L = Number 2 Low (Value)
+        
+        ; high byte
+        lda #.N2H               ; load Number 2
+        cmp .N1H                ; compare with Number 1
+        bcc .skip               ; if Number 2 < Number 1 then skip
+        sta .N1H                ; else replace Number1 with Number2
+
+        ; low byte
+        lda #.N2L               ; load Number 2
+        cmp .N1L                ; compare with Number 1
+        bcc .skip               ; if Number 2 < Number 1 then skip
+        sta .N1L                ; else replace Number1 with Number2
+
+.skip
+}
+
+;==============================================================================
+
+!macro  LIBMATH_SUB8BIT_AAA .N1, .N2, .SUM {
+                  ; .N1 = 1st Number (Address)
+                  ; .N2 = 2nd Number (Address)
+                  ; .SUM = Sum (Address)
+        sec       ; sec is the same as clear borrow
+        lda .N1   ; Get first number
+        sbc .N2   ; Subtract second number
+        sta .SUM  ; Store in sum
+}
+
+;==============================================================================
+
+!macro LIBMATH_SUB8BIT_AVA .N1, .N2, .SUM {
+                 ; .N1 = 1st Number (Address)
+                 ; .N2 = 2nd Number (Value)
+                 ; .SUM = Sum (Address)
+        sec      ; sec is the same as clear borrow
+        lda .N1  ; Get first number
+        sbc #.N2 ; Subtract second number
+        sta .SUM ; Store in sum
+}
+
+;==============================================================================
+
+!macro  LIBMATH_SUB16BIT_AAVAAA .N1H, .N1L, .N2H, .N2L, .SUMH, .SUML {
+                   ; .N1H = 1st Number High Byte (Address)
+                   ; .N1L = 1st Number Low Byte (Address)
+                   ; .N2H = 2nd Number High Byte (Value)
+                   ; .N2L = 2nd Number Low Byte (Address)
+                   ; .SUMH = Sum High Byte (Address)
+                   ; .SUML = Sum Low Byte (Address)
+        sec        ; sec is the same as clear borrow
+        lda .N1L   ; Get LSB of first number
+        sbc .N2L   ; Subtract LSB of second number
+        sta .SUML  ; Store in LSB of sum
+        lda .N1H   ; Get MSB of first number
+        sbc #.N2H  ; Subtract borrow and MSB of NUM2
+        sta .SUMH  ; Store sum in MSB of sum
+}
+
+;==============================================================================
+
+!macro  LIBMATH_SUB16BIT_AAVVAA .N1H, .N1L, .N2H, .N2L, .SUMH, .SUML {
+                ; .N1H = 1st Number High Byte (Address)
+                ; .N1L = 1st Number Low Byte (Address)
+                ; .N2H = 2nd Number High Byte (Value)
+                ; .N2L = 2nd Number Low Byte (Value)
+                ; .SUMH = Sum High Byte (Address)
+                ; .SUML = Sum Low Byte (Address)
+        sec     ; sec is the same as clear borrow
+        lda .N1L  ; Get LSB of first number
+        sbc #.N2L ; Subtract LSB of second number
+        sta .SUML  ; Store in LSB of sum
+        lda .N1H  ; Get MSB of first number
+        sbc #.N2H ; Subtract borrow and MSB of NUM2
+        sta .SUMH  ; Store sum in MSB of sum
+}
