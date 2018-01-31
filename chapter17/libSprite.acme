@@ -1,0 +1,321 @@
+;===============================================================================
+; Constants
+
+SpriteAnimsMax = 8
+
+;===============================================================================
+; Variables
+
+!macro LIBSPRITE_VARIABLES {
+    spriteAnimsActive       !fill SpriteAnimsMax, 0
+    spriteAnimsStartFrame   !fill SpriteAnimsMax, 0
+    spriteAnimsFrame        !fill SpriteAnimsMax, 0
+    spriteAnimsEndFrame     !fill SpriteAnimsMax, 0
+    spriteAnimsStopFrame    !fill SpriteAnimsMax, 0 
+    spriteAnimsSpeed        !fill SpriteAnimsMax, 0
+    spriteAnimsDelay        !fill SpriteAnimsMax, 0
+    spriteAnimsLoop         !fill SpriteAnimsMax, 0
+
+    spriteAnimsCurrent       !byte 0
+    spriteAnimsFrameCurrent  !byte 0
+    spriteAnimsEndFrameCurrent  !byte 0
+
+    spriteNumberMask  !byte %00000001, %00000010, %00000100, %00001000,                                     %00010000, %00100000, %01000000, %10000000
+}
+;===============================================================================
+; Macros/Subroutines
+
+
+!macro  LIBSPRITE_DIDCOLLIDEWITHSPRITE_A .SPRITENUM { 
+                                         ; .SPRITENUM = Sprite Number (Address)
+       
+        ldy .SPRITENUM 
+        lda spriteNumberMask,y
+        and SPSPCL
+        
+}
+
+;===============================================================================
+
+!macro  LIBSPRITE_ENABLE_AV .SPRITENUM, .ENABLE {  
+        ldy .SPRITENUM 
+        lda spriteNumberMask,y
+        
+        ldy #.ENABLE
+        beq .disable
+.enable
+        ora SPENA ; merge with the current SpriteEnable register
+        sta SPENA ; set the new value into the SpriteEnable register
+        jmp .done 
+.disable
+        eor #$FF ; get mask compliment
+        and SPENA
+        sta SPENA
+.done
+}
+
+;==============================================================================
+
+!macro  LIBSPRITE_ISANIMPLAYING_A .SPRITENUM {
+
+        ldy .SPRITENUM 
+        lda spriteAnimsActive,y
+
+}
+
+;===============================================================================
+
+!macro  LIBSPRITE_MULTICOLORENABLE_AA .SPRITENUM, .ENABLE {
+        ldy .SPRITENUM 
+        lda spriteNumberMask,y
+        
+        ldy .ENABLE 
+        beq .disable
+.enable
+        ora SPMC
+        sta SPMC
+        jmp .done 
+.disable
+        eor #$FF ; get mask compliment
+        and SPMC
+        sta SPMC
+.done
+}
+
+;===============================================================================
+
+!macro  LIBSPRITE_MULTICOLORENABLE_AV .SPRITENUM, .ENABLE {
+        ldy .SPRITENUM 
+        lda spriteNumberMask,y
+        
+        ldy #.ENABLE
+        beq .disable
+.enable
+        ora SPMC
+        sta SPMC
+        jmp .done 
+.disable
+        eor #$FF ; get mask compliment
+        and SPMC
+        sta SPMC
+.done
+}
+
+;==============================================================================
+
+!macro  LIBSPRITE_PLAYANIM_AVVVV .SPRITENUM, .STARTFRAME, .ENDFRAME, .SPEED, .LOOP {
+                                        ; Sprite Number    (Address)
+                                        ; StartFrame       (Value)
+                                        ; EndFrame         (Value)
+                                        ; Speed            (Value)
+                                        ; Loop True/False  (Value)
+
+        ldy .SPRITENUM 
+        lda #True
+        sta spriteAnimsActive,y
+        lda #.STARTFRAME
+        sta spriteAnimsStartFrame,y
+        sta spriteAnimsFrame,y
+        lda #.ENDFRAME
+        sta spriteAnimsEndFrame,y
+        lda #.SPEED
+        sta spriteAnimsSpeed,y
+        sta spriteAnimsDelay,y
+        lda #.LOOP
+        sta spriteAnimsLoop,y
+
+}
+
+;===============================================================================
+
+!macro  LIBSPRITE_SETCOLOR_AV .SPRITENUM, .COLOR {
+        ldy .SPRITENUM
+        lda #.COLOR
+        sta SP0COL,y
+}
+
+;===============================================================================
+
+!macro  LIBSPRITE_SETCOLOR_AA .SPRITENUM, .COLOR {
+        ldy .SPRITENUM
+        lda .COLOR 
+        sta SP0COL,y
+}
+
+;==============================================================================
+
+!macro  LIBSPRITE_SETFRAME_AA .SPRITENUM, .FRAMEINDEX {
+        ldy .SPRITENUM 
+        
+        clc              ; Clear carry before add
+        lda .FRAMEINDEX  ; Get first number
+        adc #SPRITERAM   ; Add
+         
+        sta SPRITE0,y
+}
+
+;===============================================================================
+
+!macro  LIBSPRITE_SETFRAME_AV .SPRITENUM, .FRAMEINDEX {
+        ldy .SPRITENUM 
+        
+        clc     ; Clear carry before add
+        lda #.FRAMEINDEX  ; Get first number
+        adc #SPRITERAM ; Add
+         
+        sta SPRITE0,y
+}
+
+;===============================================================================
+
+!macro  LIBSPRITE_SETMULTICOLORS_VV .C1, .C2 {
+                                        ; .C1 = Color 1          (Value)
+                                        ; .C2 = Color 2          (Value)
+        lda #.C1
+        sta SPMC0
+        lda #.C2
+        sta SPMC1
+}
+
+;===============================================================================
+
+!macro  LIBSPRITE_SETPOSITION_AAAA  .SPRITENUM, .XPOSH, .XPOSL, .YPOS {
+        lda .SPRITENUM                    ; get sprite number
+        asl                               ; *2 as registers laid out 2 apart
+        tay                               ; copy accumulator to y register
+
+        lda .XPOSL                        ; get XPos Low Byte
+        sta SP0X,y                        ; set the XPos sprite register
+        lda .YPOS                         ; get YPos
+        sta SP0Y,y                        ; set the YPos sprite register
+        
+        ldy .SPRITENUM 
+        lda spriteNumberMask,y            ; get sprite mask
+        
+        eor #$FF                          ; get compliment
+        and MSIGX                         ; clear the bit
+        sta MSIGX                         ; and store
+
+        ldy .XPOSH                        ; get XPos High Byte
+        beq .end                          ; skip if XPos High Byte is zero
+        ldy .SPRITENUM 
+        lda spriteNumberMask,y            ; get sprite mask
+        
+        ora MSIGX                         ; set the bit
+        sta MSIGX                         ; and store
+.end
+}
+
+;===============================================================================
+
+!macro  LIBSPRITE_SETPOSITION_VAAA  .SPRITENUM, .XPOSH, .XPOSL, .YPOS {
+        ldy #.SPRITENUM*2               ; *2 as registers laid out 2 apart
+        lda .XPOSL                      ; get XPos Low Byte
+        sta SP0X,y                      ; set the XPos sprite register
+        lda .YPOS                       ; get YPos
+        sta SP0Y,y                      ; set the YPos sprite register
+        
+        lda #1<<#.SPRITENUM             ; shift 1 into sprite bit position
+        eor #$FF                        ; get compliment
+        and MSIGX                       ; clear the bit
+        sta MSIGX                       ; and store
+
+        ldy XPOSH                       ; get XPos High Byte
+        beq .end                        ; skip if XPos High Byte is zero
+        lda #1<<#.SPRITENUM             ; shift 1 into sprite bit position
+        ora MSIGX                       ; set the bit
+        sta MSIGX                       ; and store
+.end
+}
+
+;===============================================================================
+
+!macro  LIBSPRITE_SETPRIORITY_AV .SPRITENUM, .BACK {
+        ldy .SPRITENUM 
+        lda spriteNumberMask,y
+        
+        ldy #.BACK
+        beq .disable
+.enable
+        ora SPBGPR ; merge with the current SPBGPR register
+        sta SPBGPR ; set the new value into the SPBGPR register
+        jmp .done 
+.disable
+        eor #$FF   ; get mask compliment
+        and SPBGPR
+        sta SPBGPR
+.done
+}
+
+;==============================================================================
+
+!macro  LIBSPRITE_STOPANIM_A .SPRITENUM {
+
+        ldy .SPRITENUM
+        lda #0
+        sta spriteAnimsActive,y
+
+}
+
+;==============================================================================
+!macro LIBSPRITE_SUBROUTINES {
+    libSpritesUpdate
+
+            ldx #0
+        lSoULoop
+            ; skip this sprite anim if not active
+            lda spriteAnimsActive,X
+            bne lSoUActive
+            jmp lSoUSkip
+        lSoUActive
+
+            stx spriteAnimsCurrent
+            lda spriteAnimsFrame,X
+            sta spriteAnimsFrameCurrent
+
+            lda spriteAnimsEndFrame,X
+            sta spriteAnimsEndFrameCurrent
+            
+            +LIBSPRITE_SETFRAME_AA spriteAnimsCurrent, spriteAnimsFrameCurrent
+
+            dec spriteAnimsDelay,X
+            bne lSoUSkip
+
+            ; reset the delay
+            lda spriteAnimsSpeed,X
+            sta spriteAnimsDelay,X
+
+            ; change the frame
+            inc spriteAnimsFrame,X
+            
+            ; check if reached the end frame
+            lda spriteAnimsEndFrameCurrent
+            cmp spriteAnimsFrame,X
+            bcs lSoUSkip
+
+            ; check if looping
+            lda spriteAnimsLoop,X
+            beq lSoUDestroy
+
+            ; reset the frame
+            lda spriteAnimsStartFrame,X
+            sta spriteAnimsFrame,X
+            jmp lSoUSkip
+
+        lSoUDestroy
+            ; turn off
+            lda #False
+            sta spriteAnimsActive,X
+            +LIBSPRITE_ENABLE_AV spriteAnimsCurrent, False
+
+        lSoUSkip
+            ; loop for each sprite anim
+            inx
+            cpx #SpriteAnimsMax
+            ;bne lSUloop
+            beq lSoUFinished
+            jmp lSoULoop
+        lSoUFinished
+
+        rts
+}
