@@ -29,19 +29,19 @@
 
 ; Initialize
 
-        ; Turn off interrupts to stop LIBSCREEN_WAIT failing every so 
+        ; Turn off interrupts to stop LIBSCREEN_WAIT failing every so
         ; often when the kernal interrupt syncs up with the scanline test
         sei
 
         ; Disable run/stop + restore keys
-        lda #$FC 
+        lda #$FC
         sta $0328
 
         ; Set border and background colors
         ; The last 3 parameters are not used yet
         +LIBSCREEN_SETCOLORS LightBlue, LightBlue, Black, Brown, White
 
-        ; Fill 1000 bytes (40x25) of screen memory 
+        ; Fill 1000 bytes (40x25) of screen memory
         +LIBSCREEN_SET1000 SCREENRAM, SpaceCharacter
 
         ; Fill 1000 bytes (40x25) of color memory
@@ -58,11 +58,11 @@
 
         ; Set 38 column screen mode
         +LIBSCREEN_SET38COLUMNMODE
- 
+
 
         ; Initialize the library
         jsr libSoundInit
-        
+
         ; Initialize the game
         jsr gameMapInit
         jsr gameEnemiesInit
@@ -94,7 +94,7 @@ gMLoop
 
         ; End code timer reset border color
         ;dec EXTCOL
-        
+
         ; Loop back to the start of the game loop
         jmp gMLoop
 

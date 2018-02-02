@@ -37,14 +37,14 @@ MapLastColumn = 202 ; (5 * 40) + 2 extra hidden rows, i.e. start of 6th screen
         jsr gameMapUpdate
 
         ; update the cloud colors & map row 7 colors on init
-             
+
         ; clouds colors
         +LIBSCREEN_COPYMAPROWCOLOR_VVA 0, 2, screenColumn
         +LIBSCREEN_COPYMAPROWCOLOR_VVA 1, 3, screenColumn
 
         ; ground colors
         +LIBSCREEN_COPYMAPROWCOLOR_VVA 7, 22, screenColumn
-        
+
         rts
 
 ;===============================================================================

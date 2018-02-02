@@ -9,7 +9,7 @@ PlayerXMinLow           = 24
 PlayerXMaxHigh          = 1     ; 1*256 + 64 = 320 maxX
 PlayerXMaxLow           = 64
 PlayerYMin              = 180
-PlayerYMax              = 229 
+PlayerYMax              = 229
 
 ;===============================================================================
 ; Variables
@@ -26,19 +26,19 @@ PlayerYMax              = 229
 
 !macro GAMEPLAYER_INIT {
     gamePlayerInit
-        
+
         +LIBSPRITE_ENABLE_AV             playerSprite, True
         +LIBSPRITE_SETFRAME_AV           playerSprite, PlayerFrame
         +LIBSPRITE_SETCOLOR_AV           playerSprite, LightGray
         +LIBSPRITE_MULTICOLORENABLE_AV   playerSprite, True
-        
+
         rts
 }
 
 ;===============================================================================
 
 !macro GAMEPLAYER_UPDATE {
-    gamePlayerUpdate      
+    gamePlayerUpdate
 
         jsr gamePlayerUpdatePosition
 
@@ -64,13 +64,13 @@ PlayerYMax              = 229
     gPUPDown
             +LIBINPUT_GETHELD GameportDownMask
             bne gPUPEndmove
-            +LIBMATH_ADD8BIT_AVA PlayerY, PlayerVerticalSpeed, PlayerY        
+            +LIBMATH_ADD8BIT_AVA PlayerY, PlayerVerticalSpeed, PlayerY
     gPUPEndmove
 
             ; clamp the player x position
             +LIBMATH_MIN16BIT_AAVV playerXHigh, playerXLow, PlayerXMaxHigh, PlayerXMaxLow
             +LIBMATH_MAX16BIT_AAVV playerXHigh, playerXLow, PlayerXMinHigh, PlayerXMinLow
-            
+
             ; clamp the player y position
             +LIBMATH_MIN8BIT_AV PlayerY, PlayerYMax
             +LIBMATH_MAX8BIT_AV PlayerY, PlayerYMin

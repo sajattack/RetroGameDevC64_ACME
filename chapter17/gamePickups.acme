@@ -41,13 +41,13 @@ PickupMapRow = 6
             lda #0
             sta pickupsNumResetItems
         gPRDone
-            
+
             rts
 
     ;===============================================================================
 
     gamePickupsHandle
-        
+
             lda ZeroPageTemp
             bne gPHNoPickup ; is the character a 0? i.e. a pickup
 
@@ -64,7 +64,7 @@ PickupMapRow = 6
             lda playerXChar
             sta pickupsXCharArray,X
             inc pickupsNumResetItems
-    
+
             ; increase the score
             jsr gameFlowIncreaseScore
 

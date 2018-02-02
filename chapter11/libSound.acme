@@ -188,14 +188,14 @@ CmdEnd                  = 8
 
 ;===============================================================================
 
-!macro LIBSOUND_PLAY_VAA .Voice, .BufH, .BufL {  
+!macro LIBSOUND_PLAY_VAA .Voice, .BufH, .BufL {
                         ; /1 = Voice                   (Value)
                         ; /2 = Command Buffer Ptr High (Address)
                         ; /3 = Command Buffer Ptr Low  (Address)
 
         ldx #.Voice
 
-        lda .BufH 
+        lda .BufH
         sta soundVoiceCmdPtrHigh,X
 
         lda .BufL
@@ -217,19 +217,19 @@ CmdEnd                  = 8
         inc soundVoiceCmdIndex,X ; move to next !byte
         ldy soundVoiceCmdIndex,X
         lda (ZeroPageLow),Y
- 
+
         cpx #0
         bne .reg2
         sta VCREG1
         jmp .regdone
-    .reg2 
+    .reg2
         cpx #1
         bne .reg3
         sta VCREG2
         jmp .regdone
-    .reg3   
+    .reg3
         sta VCREG3
-    .regdone        
+    .regdone
         inc soundVoiceCmdIndex,X ; move to next !byte
         ldy soundVoiceCmdIndex,X
         lda (ZeroPageLow),Y
@@ -239,7 +239,7 @@ CmdEnd                  = 8
 ;===============================================================================
 
 !macro    LIBSOUND_PROCESSATTACKDECAY {
-        
+
     lSUAttackDecay
             cmp #CmdAttackDecay
             bne .skip
@@ -251,14 +251,14 @@ CmdEnd                  = 8
             bne .reg2
             sta ATDCY1
             jmp .regdone
-    .reg2 
+    .reg2
             cpx #1
             bne .reg3
             sta ATDCY2
             jmp .regdone
-    .reg3   
+    .reg3
             sta ATDCY3
-    .regdone        
+    .regdone
             inc soundVoiceCmdIndex,X ; move to next !byte
             ldy soundVoiceCmdIndex,X
             lda (ZeroPageLow),Y
@@ -268,26 +268,26 @@ CmdEnd                  = 8
 ;===============================================================================
 
 !macro    LIBSOUND_PROCESSSUSTAINRELEASE {
-        
+
     lSUSustainRelease
         cmp #CmdSustainRelease
         bne .skip
         inc soundVoiceCmdIndex,X ; move to next !byte
         ldy soundVoiceCmdIndex,X
         lda (ZeroPageLow),Y
-        
+
         cpx #0
         bne .reg2
         sta SUREL1
         jmp .regdone
-    .reg2 
+    .reg2
         cpx #1
         bne .reg3
         sta SUREL2
         jmp .regdone
-    .reg3   
+    .reg3
         sta SUREL3
-    .regdone     
+    .regdone
         inc soundVoiceCmdIndex,X ; move to next !byte
         ldy soundVoiceCmdIndex,X
         lda (ZeroPageLow),Y
@@ -297,7 +297,7 @@ CmdEnd                  = 8
 ;===============================================================================
 
 !macro    LIBSOUND_PROCESSFREQUENCYHIGH {
-        
+
     lSUFrequencyHigh
         cmp #CmdFrequencyHigh
         bne .skip
@@ -309,12 +309,12 @@ CmdEnd                  = 8
         bne .reg2
         sta FREHI1
         jmp .regdone
-    .reg2 
+    .reg2
         cpx #1
         bne .reg3
         sta FREHI2
         jmp .regdone
-    .reg3   
+    .reg3
         sta FREHI3
     .regdone
         inc soundVoiceCmdIndex,X ; move to next !byte
@@ -326,24 +326,24 @@ CmdEnd                  = 8
 ;===============================================================================
 
 !macro    LIBSOUND_PROCESSFREQUENCYLOW {
-        
+
     lSUFrequencyLow
         cmp #CmdFrequencyLow
         bne .skip
         inc soundVoiceCmdIndex,X ; move to next !byte
         ldy soundVoiceCmdIndex,X
         lda (ZeroPageLow),Y
-        
+
         cpx #0
         bne .reg2
         sta FRELO1
         jmp .regdone
-    .reg2 
+    .reg2
         cpx #1
         bne .reg3
         sta FRELO2
         jmp .regdone
-    .reg3   
+    .reg3
         sta FRELO3
     .regdone
         inc soundVoiceCmdIndex,X ; move to next !byte
@@ -355,7 +355,7 @@ CmdEnd                  = 8
 ;===============================================================================
 
 !macro    LIBSOUND_PROCESSPULSEWIDTHHIGH {
-        
+
     lSUPulseWidthHigh
         cmp #CmdPulseWidthHigh
         bne .skip
@@ -367,12 +367,12 @@ CmdEnd                  = 8
         bne .reg2
         sta PWHI1
         jmp .regdone
-    .reg2 
+    .reg2
         cpx #1
         bne .reg3
         sta PWHI2
         jmp .regdone
-    .reg3   
+    .reg3
         sta PWHI3
     .regdone
         inc soundVoiceCmdIndex,X ; move to next !byte
@@ -384,24 +384,24 @@ CmdEnd                  = 8
 ;===============================================================================
 
 !macro    LIBSOUND_PROCESSPULSEWIDTHLOW {
-        
+
     lSUPulseWidthLow
         cmp #CmdPulseWidthLow
         bne .skip
         inc soundVoiceCmdIndex,X ; move to next !byte
         ldy soundVoiceCmdIndex,X
         lda (ZeroPageLow),Y
-        
+
         cpx #0
         bne .reg2
         sta PWLO1
         jmp .regdone
-    .reg2 
+    .reg2
         cpx #1
         bne .reg3
         sta PWLO2
         jmp .regdone
-    .reg3   
+    .reg3
         sta PWLO3
     .regdone
         inc soundVoiceCmdIndex,X ; move to next !byte
@@ -431,8 +431,8 @@ CmdEnd                  = 8
 ;===============================================================================
 
 !macro    LIBSOUND_PROCESSEND {
-     
-    lSUEnd   
+
+    lSUEnd
         cmp #CmdEnd
         bne .skip
         lda #False
@@ -499,7 +499,7 @@ CmdEnd                  = 8
             ldy soundVoiceCmdIndex,X ; load x position into Y register
             lda (ZeroPageLow),Y     ; load the command
 
-            
+
     lSUProcessLoop
             ; process the command
             +LIBSOUND_PROCESSWAVE

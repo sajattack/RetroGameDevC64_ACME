@@ -9,7 +9,7 @@ PlayerXMinLow           = 24
 PlayerXMaxHigh          = 1     ; 1*256 + 64 = 320 maxX
 PlayerXMaxLow           = 64
 PlayerYMin              = 180
-PlayerYMax              = 229 
+PlayerYMax              = 229
 
 ;===============================================================================
 ; Variables
@@ -30,17 +30,17 @@ PlayerYMax              = 229
 
 !macro GAMEPLAYER_SUBROUTINES {
     gamePlayerInit
-        
+
         +LIBSPRITE_ENABLE_AV             playerSprite, True
         +LIBSPRITE_SETFRAME_AV           playerSprite, PlayerFrame
         +LIBSPRITE_SETCOLOR_AV           playerSprite, LightGray
         +LIBSPRITE_MULTICOLORENABLE_AV   playerSprite, True
-        
+
         rts
 
 ;===============================================================================
 
-    gamePlayerUpdate      
+    gamePlayerUpdate
 
         jsr gamePlayerUpdatePosition
         jsr gamePlayerUpdateFiring
@@ -55,7 +55,7 @@ PlayerYMax              = 229
             ; so that the bullet lines up
             +LIBINPUT_GETFIREPRESSED
             bne gPUFNofire
-        
+
             +GAMEBULLETS_FIRE_AAAVV playerXChar, playerXOffset, playerYChar, White, True
     gPUFNofire
 
@@ -78,13 +78,13 @@ PlayerYMax              = 229
         gPUPDown
                 +LIBINPUT_GETHELD GameportDownMask
                 bne gPUPEndmove
-                +LIBMATH_ADD8BIT_AVA playerY, PlayerVerticalSpeed, playerY        
+                +LIBMATH_ADD8BIT_AVA playerY, PlayerVerticalSpeed, playerY
         gPUPEndmove
 
                 ; clamp the player x position
                 +LIBMATH_MIN16BIT_AAVV playerXHigh, playerXLow, PlayerXMaxHigh, PlayerXMaxLow
                 +LIBMATH_MAX16BIT_AAVV playerXHigh, playerXLow, PlayerXMinHigh, PlayerXMinLow
-                
+
                 ; clamp the player y position
                 +LIBMATH_MIN8BIT_AV playerY, PlayerYMax
                 +LIBMATH_MAX8BIT_AV playerY, PlayerYMin

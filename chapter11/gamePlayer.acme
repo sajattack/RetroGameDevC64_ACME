@@ -12,7 +12,7 @@ PlayerXMinLow           = 24
 PlayerXMaxHigh          = 1     ; 1*256 + 64 = 320 maxX
 PlayerXMaxLow           = 64
 PlayerYMin              = 180
-PlayerYMax              = 229 
+PlayerYMax              = 229
 
 ;===============================================================================
 ; Variables
@@ -34,18 +34,18 @@ PlayerYMax              = 229
 
 !macro GAMEPLAYER_SUBROUTINES {
     gamePlayerInit
-        
+
         +LIBSPRITE_ENABLE_AV             playerSprite, True
         +LIBSPRITE_SETFRAME_AV           playerSprite, PlayerFrame
         +LIBSPRITE_SETCOLOR_AV           playerSprite, LightGray
         +LIBSPRITE_MULTICOLORENABLE_AV   playerSprite, True
-        
+
         rts
 
 ;===============================================================================
 
-    gamePlayerUpdate      
-        
+    gamePlayerUpdate
+
         lda playerActive
         beq gPUSkip
 
@@ -75,7 +75,7 @@ PlayerYMax              = 229
         +LIBSPRITE_ENABLE_AV             playerSprite, True
         +LIBSPRITE_SETFRAME_AV           playerSprite, PlayerFrame
         +LIBSPRITE_SETCOLOR_AV           playerSprite, LightGray
-        
+
         lda #PlayerStartXHigh
         sta playerXHigh
         lda #PlayerStartXLow
@@ -83,7 +83,7 @@ PlayerYMax              = 229
         lda #PlayerStartY
         sta playerY
         +LIBSPRITE_SETPOSITION_AAAA playerSprite, playerXHigh, playerXLow, playerY
-        
+
         rts
 
 ;===============================================================================
@@ -100,7 +100,7 @@ PlayerYMax              = 229
 
         ; play explosion sound
         +LIBSOUND_PLAY_VAA 1, soundExplosionHigh, soundExplosionLow
-                                
+
     gPUCNocollision
 
         rts
@@ -114,13 +114,13 @@ PlayerYMax              = 229
             ; so that the bullet lines up
             +LIBINPUT_GETFIREPRESSED
             bne gPUFNofire
-        
+
             ; fire the bullet
             +GAMEBULLETS_FIRE_AAAVV playerXChar, playerXOffset, playerYChar, White, True
 
             ; play the firing sound
             +LIBSOUND_PLAY_VAA 0, soundFiringHigh, soundFiringLow
-            
+
         gPUFNofire
 
             rts
@@ -142,13 +142,13 @@ PlayerYMax              = 229
         gPUPDown
                 +LIBINPUT_GETHELD GameportDownMask
                 bne gPUPEndmove
-                +LIBMATH_ADD8BIT_AVA playerY, PlayerVerticalSpeed, playerY        
+                +LIBMATH_ADD8BIT_AVA playerY, PlayerVerticalSpeed, playerY
         gPUPEndmove
 
                 ; clamp the player x position
                 +LIBMATH_MIN16BIT_AAVV playerXHigh, playerXLow, PlayerXMaxHigh, PlayerXMaxLow
                 +LIBMATH_MAX16BIT_AAVV playerXHigh, playerXLow, PlayerXMinHigh, PlayerXMinLow
-                
+
                 ; clamp the player y position
                 +LIBMATH_MIN8BIT_AV playerY, PlayerYMax
                 +LIBMATH_MAX8BIT_AV playerY, PlayerYMin

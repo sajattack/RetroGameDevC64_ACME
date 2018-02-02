@@ -1,5 +1,5 @@
 ; Sprite top left corner to char coordinates:
-; int((spr_x-24)/8), int((spr_y-50)/8) 
+; int((spr_x-24)/8), int((spr_y-50)/8)
 ;===============================================================================
 ; Constants
 
@@ -10,7 +10,7 @@ Bullet1stCharacter = 64
 ; Variables
 !macro GAMEBULLETS_VARIABLES {
     bulletsXHigh    !byte 0
-    bulletsXLow     !byte 0     
+    bulletsXLow     !byte 0
     bulletsY        !byte 0
     bulletsXCharCurrent !byte 0
     bulletsXOffsetCurrent !byte 0
@@ -35,7 +35,7 @@ Bullet1stCharacter = 64
 ;===============================================================================
 ; Macros/Subroutines
 
-!macro  GAMEBULLETS_FIRE_AAAVV .XChar, .XOffset, .YChar, .Color, .Direction { 
+!macro  GAMEBULLETS_FIRE_AAAVV .XChar, .XOffset, .YChar, .Color, .Direction {
                                     ; /1 = XChar            (Address)
                                     ; /2 = XOffset          (Address)
                                     ; /3 = YChar            (Address)
@@ -49,15 +49,15 @@ Bullet1stCharacter = 64
             ; save the current bullet in the list
             lda #1
             sta bulletsActive,X
-            lda .XChar 
+            lda .XChar
             sta bulletsXChar,X
-            
+
             clc
             lda .XOffset ; get the character offset
             adc #Bullet1stCharacter ; add on the bullet first character
             sta bulletsXOffset,X
 
-            lda .YChar 
+            lda .YChar
             sta bulletsYChar,X
             lda #.Color
             sta bulletsColor,X
@@ -79,9 +79,9 @@ Bullet1stCharacter = 64
                                 ; /2 = YChar            (Address)
                                 ; /3 = Direction (True-Up, False-Down) (Value)
 
-        lda .XChar 
+        lda .XChar
         sta bulletsXCharCol
-        lda .YChar 
+        lda .YChar
         sta bulletsYCharCol
         lda #.Direction
         sta bulletsDirCol
@@ -138,7 +138,7 @@ Bullet1stCharacter = 64
         .doneXCheck
             lda bulletsXFlag
             beq .skip
-    
+
             ; collided
             lda #0
             sta bulletsActive,X ; disable bullet
@@ -187,7 +187,7 @@ Bullet1stCharacter = 64
     gameBulletsReset
 
             ldx #0
-            
+
         gBRLoop
             lda bulletsActive,x
             beq gBRSkip
@@ -221,7 +221,7 @@ Bullet1stCharacter = 64
 
             +LIBSCREEN_SETCHARPOSITION_AA bulletsXCharCurrent, bulletsYCharCurrent
             +LIBSCREEN_SETCHAR_V SpaceCharacter
-            
+
             lda bulletsDirCurrent
             beq .down
         .up
@@ -245,12 +245,12 @@ Bullet1stCharacter = 64
 
             lda #0
             sta bulletsActive,X
-            jmp skipBulletUpdate        
+            jmp skipBulletUpdate
         .skip2
             ; set the bullet color
             +LIBSCREEN_SETCOLORPOSITION_AA bulletsXCharCurrent, bulletsYCharCurrent
             +LIBSCREEN_SETCHAR_A bulletsColorCurrent
-            
+
             ; set the bullet character
             +LIBSCREEN_SETCHARPOSITION_AA bulletsXCharCurrent, bulletsYCharCurrent
             +LIBSCREEN_SETCHAR_A bulletsXOffsetCurrent
@@ -266,7 +266,7 @@ Bullet1stCharacter = 64
             beq .finished
             jmp buloop
         .finished
-            
+
             rts
 
     ;===============================================================================
