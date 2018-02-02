@@ -34,7 +34,7 @@ FireDelayMax            = 30
 ;===============================================================================
 
 !macro LIBINPUT_GETFIREPRESSED {
-     
+
         lda #1
         sta fireBlip ; clear Fire flag
 
@@ -47,14 +47,14 @@ FireDelayMax            = 30
         ; is this 1st frame?
         lda gameportDiff
         and #GameportFireMask
-        
+
         beq .notfirst
         lda #0
         sta fireBlip ; Fire
 
         ; reset delay
         lda #FireDelayMax
-        sta fireDelay        
+        sta fireDelay
 .notfirst
 
         ; is the delay zero?
@@ -64,15 +64,15 @@ FireDelayMax            = 30
         sta fireBlip ; Fire
         ; reset delay
         lda #FireDelayMax
-        sta fireDelay   
-        
-.notheld 
+        sta fireDelay
+
+.notheld
         lda fireBlip
 }  ; test with bne on return
 
 ;===============================================================================
 
-!macro LIBINPUT_UPDATE { 
+!macro LIBINPUT_UPDATE {
 
 libInputUpdate
 
@@ -82,7 +82,7 @@ libInputUpdate
         eor gameportLastFrame
         sta gameportDiff
 
-        
+
         lda fireDelay
         beq lIUDelayZero
         dec fireDelay

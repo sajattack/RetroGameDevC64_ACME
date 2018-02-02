@@ -11,7 +11,7 @@ SpriteAnimsMax = 8
     spriteAnimsStartFrame   !fill SpriteAnimsMax, 0
     spriteAnimsFrame        !fill SpriteAnimsMax, 0
     spriteAnimsEndFrame     !fill SpriteAnimsMax, 0
-    spriteAnimsStopFrame    !fill SpriteAnimsMax, 0 
+    spriteAnimsStopFrame    !fill SpriteAnimsMax, 0
     spriteAnimsSpeed        !fill SpriteAnimsMax, 0
     spriteAnimsDelay        !fill SpriteAnimsMax, 0
     spriteAnimsLoop         !fill SpriteAnimsMax, 0
@@ -26,27 +26,27 @@ SpriteAnimsMax = 8
 ; Macros/Subroutines
 
 
-!macro  LIBSPRITE_DIDCOLLIDEWITHSPRITE_A .SPRITENUM { 
+!macro  LIBSPRITE_DIDCOLLIDEWITHSPRITE_A .SPRITENUM {
                                          ; .SPRITENUM = Sprite Number (Address)
-       
-        ldy .SRITENUM 
+
+        ldy .SRITENUM
         lda SpriteNumberMask,y
         and SPSPCL
-        
+
 }
 
 ;===============================================================================
 
-!macro  LIBSPRITE_ENABLE_AV .SPRITENUM, .ENABLE {  
-        ldy .SPRITENUM 
+!macro  LIBSPRITE_ENABLE_AV .SPRITENUM, .ENABLE {
+        ldy .SPRITENUM
         lda spriteNumberMask,y
-        
+
         ldy #.ENABLE
         beq .disable
 .enable
         ora SPENA ; merge with the current SpriteEnable register
         sta SPENA ; set the new value into the SpriteEnable register
-        jmp .done 
+        jmp .done
 .disable
         eor #$FF ; get mask compliment
         and SPENA
@@ -58,7 +58,7 @@ SpriteAnimsMax = 8
 
 !macro  LIBSPRITE_ISANIMPLAYING_A .SPRITENUM {
 
-        ldy .SPRITENUM 
+        ldy .SPRITENUM
         lda spriteAnimsActive,y
 
 }
@@ -66,15 +66,15 @@ SpriteAnimsMax = 8
 ;===============================================================================
 
 !macro  LIBSPRITE_MULTICOLORENABLE_AA .SPRITENUM, .ENABLE {
-        ldy .SPRITENUM 
+        ldy .SPRITENUM
         lda spriteNumberMask,y
-        
-        ldy .ENABLE 
+
+        ldy .ENABLE
         beq .disable
 .enable
         ora SPMC
         sta SPMC
-        jmp .done 
+        jmp .done
 .disable
         eor #$FF ; get mask compliment
         and SPMC
@@ -85,15 +85,15 @@ SpriteAnimsMax = 8
 ;===============================================================================
 
 !macro  LIBSPRITE_MULTICOLORENABLE_AV .SPRITENUM, .ENABLE {
-        ldy .SPRITENUM 
+        ldy .SPRITENUM
         lda spriteNumberMask,y
-        
+
         ldy #.ENABLE
         beq .disable
 .enable
         ora SPMC
         sta SPMC
-        jmp .done 
+        jmp .done
 .disable
         eor #$FF ; get mask compliment
         and SPMC
@@ -110,7 +110,7 @@ SpriteAnimsMax = 8
                                         ; Speed            (Value)
                                         ; Loop True/False  (Value)
 
-        ldy .SPRITENUM 
+        ldy .SPRITENUM
         lda #True
         sta spriteAnimsActive,y
         lda #.STARTFRAME
@@ -138,7 +138,7 @@ SpriteAnimsMax = 8
 
 !macro  LIBSPRITE_SETCOLOR_AA .SPRITENUM, .COLOR {
         ldy .SPRITENUM
-        lda .COLOR 
+        lda .COLOR
         sta SP0COL,y
         endm
 }
@@ -146,24 +146,24 @@ SpriteAnimsMax = 8
 ;==============================================================================
 
 !macro  LIBSPRITE_SETFRAME_AA .SPRITENUM, .FRAMEINDEX {
-        ldy .SPRITENUM 
-        
+        ldy .SPRITENUM
+
         clc              ; Clear carry before add
         lda .FRAMEINDEX  ; Get first number
         adc #SPRITERAM   ; Add
-         
+
         sta SPRITE0,y
 }
 
 ;===============================================================================
 
 !macro  LIBSPRITE_SETFRAME_AV .SPRITENUM, .FRAMEINDEX {
-        ldy .SPRITENUM 
-        
+        ldy .SPRITENUM
+
         clc     ; Clear carry before add
         lda #.FRAMEINDEX  ; Get first number
         adc #SPRITERAM ; Add
-         
+
         sta SPRITE0,y
 }
 
@@ -189,19 +189,19 @@ SpriteAnimsMax = 8
         sta SP0X,y                        ; set the XPos sprite register
         lda .YPOS                         ; get YPos
         sta SP0Y,y                        ; set the YPos sprite register
-        
-        ldy .SPRITENUM 
+
+        ldy .SPRITENUM
         lda spriteNumberMask,y            ; get sprite mask
-        
+
         eor #$FF                          ; get compliment
         and MSIGX                         ; clear the bit
         sta MSIGX                         ; and store
 
         ldy .XPOSH                        ; get XPos High Byte
         beq .end                          ; skip if XPos High Byte is zero
-        ldy .SPRITENUM 
+        ldy .SPRITENUM
         lda spriteNumberMask,y            ; get sprite mask
-        
+
         ora MSIGX                         ; set the bit
         sta MSIGX                         ; and store
 .end
@@ -215,7 +215,7 @@ SpriteAnimsMax = 8
         sta SP0X,y                      ; set the XPos sprite register
         lda .YPOS                       ; get YPos
         sta SP0Y,y                      ; set the YPos sprite register
-        
+
         lda #1<<#.SPRITENUM             ; shift 1 into sprite bit position
         eor #$FF                        ; get compliment
         and MSIGX                       ; clear the bit
@@ -232,15 +232,15 @@ SpriteAnimsMax = 8
 ;===============================================================================
 
 !macro  LIBSPRITE_SETPRIORITY_AV .SPRITENUM, .BACK {
-        ldy .SPRITENUM 
+        ldy .SPRITENUM
         lda spriteNumberMask,y
-        
+
         ldy #.BACK
         beq .disable
 .enable
         ora SPBGPR ; merge with the current SPBGPR register
         sta SPBGPR ; set the new value into the SPBGPR register
-        jmp .done 
+        jmp .done
 .disable
         eor #$FF   ; get mask compliment
         and SPBGPR
@@ -276,7 +276,7 @@ SpriteAnimsMax = 8
 
             lda spriteAnimsEndFrame,X
             sta spriteAnimsEndFrameCurrent
-            
+
             +LIBSPRITE_SETFRAME_AA spriteAnimsCurrent, spriteAnimsFrameCurrent
 
             dec spriteAnimsDelay,X
@@ -288,7 +288,7 @@ SpriteAnimsMax = 8
 
             ; change the frame
             inc spriteAnimsFrame,X
-            
+
             ; check if reached the end frame
             lda spriteAnimsEndFrameCurrent
             cmp spriteAnimsFrame,X

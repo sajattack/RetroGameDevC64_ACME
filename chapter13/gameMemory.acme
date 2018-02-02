@@ -1,6 +1,6 @@
 ;===============================================================================
 ; $00-$FF  PAGE ZERO (256 bytes)
- 
+
                 ; $00-$01   Reserved for IO
 ZeroPageTemp    = $02
                 ; $03-$8F   Reserved for BASIC
@@ -32,8 +32,8 @@ SCREENRAM       = $0400
 SPRITE0         = $07F8
 
 ; $0801
-; Game code is placed here by using the *=$0801 directive 
-; in gameMain.asm 
+; Game code is placed here by using the *=$0801 directive
+; in gameMain.asm
 
 SPRITERAM       = 192
 *=$3000
@@ -96,13 +96,13 @@ PWHI3           = $D411 ;(54289)
 VCREG3          = $D412 ;(54290)
 ATDCY3          = $D413 ;(54291)
 SUREL3          = $D414 ;(54292)
-SIGVOL          = $D418 ;(54296)      
+SIGVOL          = $D418 ;(54296)
 COLORRAM        = $D800
 CIAPRA          = $DC00
 CIAPRB          = $DC01
 
 ;===============================================================================
-; $E000-$FFFF  KERNAL ROM (8K) 
+; $E000-$FFFF  KERNAL ROM (8K)
 
 
 ;===============================================================================

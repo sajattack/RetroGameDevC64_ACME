@@ -81,14 +81,14 @@ FlowStateDying  = 2
 
             ; display the menu text
             +LIBSCREEN_DRAWTEXT_AAAV flowStartX, flowStartY, flowStartText, White
-            
+
             +LIBINPUT_GETFIREPRESSED
             bne gFUMEnd
 
             ; clear the menu text
             +LIBSCREEN_DRAWTEXT_AAAV flowStartX, flowStartY, flowStartClearText, White
 
-            ; reset 
+            ; reset
             jsr gameFlowResetLives
             jsr gamePlayerReset
 
@@ -125,13 +125,13 @@ FlowStateDying  = 2
             +LIBINPUT_GETFIREPRESSED
             bne gFUDEnd
 
-            ; reset 
+            ; reset
             jsr gamePlayerReset
 
             ; change state
             lda #FlowStateAlive
             sta flowState
-            
+
     gFUDEnd
             rts
 
@@ -140,7 +140,7 @@ FlowStateDying  = 2
     gameFlowUpdate
 
             ; get the current state
-            ldy flowState 
+            ldy flowState
 
             ; write the subroutine address to a zeropage location
             lda gameFlowJumpTableLow,y
@@ -154,7 +154,7 @@ FlowStateDying  = 2
     ;===============================================================================
 
     gameFlowIncreaseScore
-            
+
             sed             ;set decimal mode
             clc
             lda #$50        ;50 points scored
@@ -175,13 +175,13 @@ FlowStateDying  = 2
     ;===============================================================================
 
     gameFlowResetScore
-            
+
             lda #0
             sta score1
             sta score2
             sta score3
 
-            jsr gameFlowScoreDisplay 
+            jsr gameFlowScoreDisplay
 
             rts
 
@@ -205,8 +205,8 @@ FlowStateDying  = 2
             jsr gameAliensReset
 
             dec lives
-            bne gFPDHasLivesLeft 
-            
+            bne gFPDHasLivesLeft
+
             jsr gameFlowUpdateHiScore
             jsr gameFlowResetScore
 

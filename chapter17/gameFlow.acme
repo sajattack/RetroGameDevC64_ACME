@@ -9,7 +9,7 @@ FlowStateDying  = 2
 ;===============================================================================
 ; Variables
 
-!macro GAMEFLOW_VARIABLES { 
+!macro GAMEFLOW_VARIABLES {
 
 flowScoreX      !byte 1
 flowScoreNumX   !byte 0
@@ -81,14 +81,14 @@ gameFlowJumpTableHigh
 
             ; display the menu text
             +LIBSCREEN_DRAWTEXT_AAAV flowStartX, flowStartY, flowStartText, White
-            
+
             +LIBINPUT_GETFIREPRESSED
             bne gFUMEnd
 
             ; clear the menu text
             +LIBSCREEN_DRAWTEXT_AAAV flowStartX, flowStartY, flowStartClearText, White
 
-            ; reset 
+            ; reset
             jsr gameFlowResetTime
             jsr gamePickupsReset
             jsr gamePlayerReset
@@ -111,7 +111,7 @@ gameFlowJumpTableHigh
     ;===============================================================================
 
     gameFlowUpdateDying
-            
+
             +LIBSPRITE_ISANIMPLAYING_A playerSprite
             bne gFUDEnd
 
@@ -127,7 +127,7 @@ gameFlowJumpTableHigh
     gameFlowUpdate
 
             ; get the current state
-            ldy flowState 
+            ldy flowState
 
             ; write the subroutine address to a zeropage location
             lda gameFlowJumpTableLow,y
@@ -141,7 +141,7 @@ gameFlowJumpTableHigh
     ;===============================================================================
 
     gameFlowIncreaseScore
-            
+
             sed             ;set decimal mode
             clc
             lda #$50        ;50 points scored
@@ -162,13 +162,13 @@ gameFlowJumpTableHigh
     ;===============================================================================
 
     gameFlowResetScore
-            
+
             lda #0
             sta score1
             sta score2
             sta score3
 
-            jsr gameFlowScoreDisplay 
+            jsr gameFlowScoreDisplay
 
             rts
 

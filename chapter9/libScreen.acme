@@ -5,7 +5,7 @@
 Black           = 0
 White           = 1
 Red             = 2
-Cyan            = 3 
+Cyan            = 3
 Purple          = 4
 Green           = 5
 Blue            = 6
@@ -38,7 +38,7 @@ True            = 1
             !byte <SCREENRAM+840, <SCREENRAM+880, <SCREENRAM+920
             !byte <SCREENRAM+960
 
-    ScreenRAMRowStartHigh 
+    ScreenRAMRowStartHigh
             !byte >SCREENRAM,      >SCREENRAM+40,  >SCREENRAM+80
             !byte >SCREENRAM+120, >SCREENRAM+160, >SCREENRAM+200
             !byte >SCREENRAM+240, >SCREENRAM+280, >SCREENRAM+320
@@ -82,7 +82,7 @@ True            = 1
                         ; .X = X Position Absolute
                         ; .Y = Y Position Absolute
                         ; .P = 1st Number Low Byte Pointer
-        
+
         lda #White
         sta $0286       ; set text color
         lda #$20        ; space
@@ -91,9 +91,9 @@ True            = 1
         jsr $ffd2
         jsr $ffd2
         ;jsr $E566      ; reset cursor
-        ldx #.Y         ; Select row 
-        ldy #.X         ; Select column 
-        jsr $E50C       ; Set cursor 
+        ldx #.Y         ; Select row
+        ldy #.X         ; Select column
+        jsr $E50C       ; Set cursor
 
         lda #0
         ldx ./3
@@ -107,7 +107,7 @@ True            = 1
                         ; .Y = Y Position Absolute
                         ; .HP = 1st Number High Byte Pointer
                         ; .LP = 1st Number Low Byte Pointer
-        
+
         lda #White
         sta $0286       ; set text color
         lda #$20        ; space
@@ -116,12 +116,12 @@ True            = 1
         jsr $ffd2
         jsr $ffd2
         ;jsr $E566      ; reset cursor
-        ldx #.Y         ; Select row 
-        ldy #.X         ; Select column 
-        jsr $E50C       ; Set cursor 
+        ldx #.Y         ; Select row
+        ldy #.X         ; Select column
+        jsr $E50C       ; Set cursor
 
         lda .HP
-        ldx .LP 
+        ldx .LP
         jsr $BDCD       ; print number
 }
 
@@ -134,7 +134,7 @@ True            = 1
                                 ; .C = Text Color (Value)
 
         ldy .Y ; load y position as index into list
-        
+
         lda ScreenRAMRowStartLow,Y ; load low address byte
         sta ZeroPageLow
 
@@ -155,7 +155,7 @@ True            = 1
 
 
         ldy .Y ; load y position as index into list
-        
+
         lda ColorRAMRowStartLow,Y ; load low address byte
         sta ZeroPageLow
 
@@ -186,7 +186,7 @@ True            = 1
                                 ; .C = Text Color (Value)
 
         ldy .Y ; load y position as index into list
-        
+
         lda ScreenRAMRowStartLow,Y ; load low address byte
         sta ZeroPageLow
 
@@ -196,9 +196,9 @@ True            = 1
         ldy .X ; load x position into Y register
 
         ; get high nybble
-        lda .D 
+        lda .D
         and #$F0
-        
+
         ; convert to ascii
         lsr
         lsr
@@ -209,21 +209,21 @@ True            = 1
         sta (ZeroPageLow),Y
 
         ; move along to next screen position
-        iny 
+        iny
 
         ; get low nybble
         lda .D
         and #$0F
 
         ; convert to ascii
-        ora #$30  
+        ora #$30
 
         sta (ZeroPageLow),Y
-    
+
 
         ; now set the colors
         ldy .Y ; load y position as index into list
-        
+
         lda ColorRAMRowStartLow,Y ; load low address byte
         sta ZeroPageLow
 
@@ -236,8 +236,8 @@ True            = 1
         sta (ZeroPageLow),Y
 
         ; move along to next screen position
-        iny 
-        
+        iny
+
         sta (ZeroPageLow),Y
 }
 
@@ -260,29 +260,29 @@ True            = 1
                                 ; XOffset          (Address)
                                 ; YChar            (Address)
                                 ; YOffset          (Address)
-                                
 
-        lda .XHighPixels 
+
+        lda .XHighPixels
         sta ZeroPageParam1
-        lda .XLowPixels 
+        lda .XLowPixels
         sta ZeroPageParam2
         lda #.XAdjust
         sta ZeroPageParam3
-        lda .YPixels 
+        lda .YPixels
         sta ZeroPageParam4
         lda #.YAdjust
         sta ZeroPageParam5
-        
+
         jsr libScreen_PixelToChar
 
         lda ZeroPageParam6
-        sta .XChar 
+        sta .XChar
         lda ZeroPageParam7
-        sta .XOffset 
+        sta .XOffset
         lda ZeroPageParam8
-        sta .YChar 
+        sta .YChar
         lda ZeroPageParam9
-        sta .YOffset 
+        sta .YOffset
 
 }
 
@@ -360,7 +360,7 @@ True            = 1
 
         lda SCROLX
         and #%11111000
-        ora .ScrollX 
+        ora .ScrollX
         sta SCROLX
 
 }
@@ -435,7 +435,7 @@ True            = 1
 ;==============================================================================
 
 !macro  LIBSCREEN_SETCHAR_A .CC { ; .CC = Character Code (Address)
-        lda .CC 
+        lda .CC
         sta (ZeroPageLow),Y
 }
 
@@ -444,9 +444,9 @@ True            = 1
 !macro  LIBSCREEN_SETCHARPOSITION_AA .X, .Y {
                                      ; .X = X Position 0-39 (Address)
                                      ; .Y = Y Position 0-24 (Address)
-        
+
         ldy .Y ; load y position as index into list
-        
+
         lda ScreenRAMRowStartLow,Y ; load low address byte
         sta ZeroPageLow
 
@@ -459,12 +459,12 @@ True            = 1
 
 ;==============================================================================
 
-!macro  LIBSCREEN_SETCOLORPOSITION_AA .X, .Y {   
+!macro  LIBSCREEN_SETCOLORPOSITION_AA .X, .Y {
                                 ; .X = X Position 0-39 (Address)
                                 ; .Y = Y Position 0-24 (Address)
-                               
+
         ldy .Y ; load y position as index into list
-        
+
         lda ColorRAMRowStartLow,Y ; load low address byte
         sta ZeroPageLow
 
@@ -478,13 +478,13 @@ True            = 1
 ;===============================================================================
 
 ; Sets the border and background colors
-!macro  LIBSCREEN_SETCOLORS .BORD, .BG0, .BG1, .BG2, .BG3 {  
+!macro  LIBSCREEN_SETCOLORS .BORD, .BG0, .BG1, .BG2, .BG3 {
                                 ; .Border = Border Color       (Value)
                                 ; .BG0 = Background Color 0 (Value)
                                 ; .BG1 = Background Color 1 (Value)
                                 ; .BG2 = Background Color 2 (Value)
                                 ; .BG3 = Background Color 3 (Value)
-                                
+
         lda #.BORD                 ; Color0 -> A
         sta EXTCOL              ; A -> EXTCOL
         lda #.BG0                 ; Color1 -> A
@@ -510,7 +510,7 @@ True            = 1
 
 ;===============================================================================
 
-; Waits for a given scanline 
+; Waits for a given scanline
 !macro  LIBSCREEN_WAIT_V .SC {  ; .SC = Scanline (Value)
 
 .loop   lda #.SC                ; Scanline -> A

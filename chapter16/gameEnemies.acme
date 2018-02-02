@@ -39,7 +39,7 @@ EnemyAnimDelay = 10
 			+LIBSPRITE_MULTICOLORENABLE_AV   enemiesSprite, True
 			+LIBSPRITE_SETPRIORITY_AV        enemiesSprite, True
 			+LIBSPRITE_PLAYANIM_AVVVV        enemiesSprite, 10, 12, EnemyAnimDelay, True
-			
+
 			; loop for each enemy
 			inx
 			cpx #EnemiesMax
@@ -59,7 +59,7 @@ EnemyAnimDelay = 10
 
 			lda enemiesXCharArray,x
 			sta enemiesXChar
-		
+
 			; calculate the on screen char position
 			+LIBMATH_SUB8BIT_AAA enemiesXChar, screenColumn, enemiesScreenXChar
 
@@ -89,11 +89,11 @@ EnemyAnimDelay = 10
 			sta enemiesXLow
 
 			+LIBMATH_ADD8BIT_AAA enemiesXLow, screenScrollXValue, enemiesXLow
-	
+
 			jsr gameEnemiesUpdatePosition
 
 			+LIBSPRITE_SETPOSITION_AAAA enemiesSprite, enemiesXHigh, enemiesXLow, enemiesY
-			
+
 			jmp gEUNext
 	gEUOffscreen
 			+LIBSPRITE_ENABLE_AV enemiesSprite, False
@@ -126,7 +126,7 @@ EnemyAnimDelay = 10
 			lda enemiesXOffset
 			sta enemiesXOffsetArray,X
 			jmp gEUPFinished
-			
+
 	gEUPMoveRight
 			lda enemiesXMoveArray,X
 			sta enemiesXMove
@@ -139,7 +139,7 @@ EnemyAnimDelay = 10
 			lda enemiesXOffset
 			sta enemiesXOffsetArray,X
 			jmp gEUPFinished
-			
+
 	gEUPTurnRight
 			lda #False
 			sta enemiesFaceLeftArray,X

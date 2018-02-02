@@ -65,17 +65,17 @@ PlayerAnimDelay         = 6
 !macro GAMEPLAYER_SUBROUTINES {
 
     gamePlayerInit
-            
+
             +LIBSPRITE_ENABLE_AV             playerSprite, 1
             +LIBSPRITE_SETFRAME_AV           playerSprite, PlayerIdleRightAnim
             +LIBSPRITE_SETCOLOR_AV           playerSprite, Blue
             +LIBSPRITE_MULTICOLORENABLE_AV   playerSprite, 1
-            
+
             rts
 
     ;===============================================================================
 
-    gamePlayerUpdate      
+    gamePlayerUpdate
 
             jsr gamePlayerUpdateState
             jsr gamePlayerUpdateVelocity
@@ -105,7 +105,7 @@ PlayerAnimDelay         = 6
             +LIBINPUT_GETHELD GameportRightMask
             bne gPUVEnd
             lda #PlayerHorizontalSpeed
-            sta playerXVelocity  
+            sta playerXVelocity
     gPUVEnd
 
             ; get absolute x velocity
@@ -151,7 +151,7 @@ PlayerAnimDelay         = 6
     gamePlayerUpdateState
 
             ; now run the state machine
-            ldy playerState 
+            ldy playerState
 
             ; write the state's routine address to a zeropage temporary
             lda gamePlayerJumpTableLow,y
@@ -185,7 +185,7 @@ PlayerAnimDelay         = 6
             +LIBMATH_MAX16BIT_AAVV playerXHigh, playerXLow, PlayerXMinHigh, PlayerXMinLow
 
     ; y position -----------------------------------------------
-            
+
             lda playerYVelocity
             beq gPUPYDone ; if zero velocity
             bpl gPUPYPositive
@@ -203,14 +203,14 @@ PlayerAnimDelay         = 6
             cmp playerY
             bcs gPUPNotBelowGround
             sta playerY
-            
+
             lda #True
             sta playerOnGround
 
             lda #0
             sta playerYVelocity
     gPUPNotBelowGround
-            
+
     ; ----------------------------------------------------------
 
             ; set the sprite position
@@ -261,7 +261,7 @@ PlayerAnimDelay         = 6
             bne gPUIRNoJump
             jsr gamePlayerSetJumpRight
     gPUIRNoJump
-            
+
             rts
 
     ;===============================================================================
@@ -385,7 +385,7 @@ PlayerAnimDelay         = 6
             lda #PlayerStateRunLeft
             sta playerState
             +LIBSPRITE_PLAYANIM_AVVVV playerSprite, 6, 8, PlayerAnimDelay, True
-            
+
             rts
 
     ;===============================================================================

@@ -8,7 +8,7 @@ StarsNumFrames          = 8
 ;==============================================================================
 ; Variables
 
-!macro GAMESTARS_VARIABLES { 
+!macro GAMESTARS_VARIABLES {
     starsYCharArray         !byte 15,  6, 17,  1, 18,  2,  4, 14, 12,  5
                             !byte 13,  3,  9,  7, 10, 21,  5, 13, 10, 23
                             !byte 11,  5, 15,  1,  5,  9,  7, 18, 11,  2
@@ -39,8 +39,8 @@ StarsNumFrames          = 8
     .loop
             ; only update when the delay is zero
             dec starsDelayArray,X
-            ;bne .skipUpdate    
-            beq .ok        
+            ;bne .skipUpdate
+            beq .ok
             jmp .skipUpdate
     .ok
             ; reset the star delay
@@ -65,13 +65,13 @@ StarsNumFrames          = 8
             ; erase the current star character on screen
             +LIBSCREEN_SETCHARPOSITION_AA starsCurrentX, starsCurrentY
             +LIBSCREEN_SETCHAR_V SpaceCharacter
-            
+
             ; inc char position
             inc starsYCharArray,X
             lda starsYCharArray,X
             cmp #25
             bne .skip
-                
+
             ; reset char position
             lda #1 ; reset to 1 to leave a row empty at the top for the scores
             sta starsYCharArray,X
@@ -103,7 +103,7 @@ StarsNumFrames          = 8
             ; draw the current star
             +LIBSCREEN_SETCHARPOSITION_AA starsCurrentX, starsCurrentY
             +LIBSCREEN_SETCHAR_A starsCurrentFrame
-        
+
     .skipUpdate
             ; loop for each star
             inx
@@ -112,6 +112,6 @@ StarsNumFrames          = 8
             beq .finished
             jmp .loop
     .finished
-    
+
         rts
 }

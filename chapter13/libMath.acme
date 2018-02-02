@@ -1,17 +1,17 @@
 ;===============================================================================
 ; Macros/Subroutines
 
-!macro  LIBMATH_ABS_AA .N, .R { 
+!macro  LIBMATH_ABS_AA .N, .R {
                         ; .N = Number (Address)
                         ; .R = Result (Address)
-        lda .N 
+        lda .N
         bpl .positive
         eor #$FF        ; invert the bits
-        sta .R 
+        sta .R
         inc .R          ; add 1 to give the two's compliment
         jmp .done
 .positive
-        sta .R 
+        sta .R
 .done
 
 }
@@ -81,7 +81,7 @@
 !macro  LIBMATH_MIN8BIT_AV .N1, .N2 {
                                 ; .N1 = Number 1 (Address)
                                 ; .N2 = Number 2 (Value)
-        
+
         lda #.N2                ; load Number 2
         cmp .N1                 ; compare with Number 1
         bcs .skip               ; if Number 2 >= Number 1 then skip
@@ -94,7 +94,7 @@
 !macro  LIBMATH_MAX8BIT_AV .N1, .N2 {
                                 ; .N1 = Number 1 (Address)
                                 ; .N2 = Number 2 (Value)
-        
+
         lda #.N2                ; load Number 2
         cmp .N1                 ; compare with Number 1
         bcc .skip               ; if Number 2 < Number 1 then skip
@@ -109,7 +109,7 @@
                                 ; .N1L = Number 1 Low (Address)
                                 ; .N2H = Number 2 High (Value)
                                 ; .N2L = Number 2 Low (Value)
-        
+
         ; high byte
         lda .N1H                ; load Number 1
         cmp #.N2H               ; compare with Number 2
@@ -132,7 +132,7 @@
                                 ; .N1L = Number 1 Low (Address)
                                 ; .N2H = Number 2 High (Value)
                                 ; .N2L = Number 2 Low (Value)
-        
+
         ; high byte
         lda #.N2H               ; load Number 2
         cmp .N1H                ; compare with Number 1
